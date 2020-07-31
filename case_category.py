@@ -1,11 +1,16 @@
 import xlrd
+import xlwt
 from xlutils.copy import copy
 from copy import deepcopy
-location = "/home/niks/Downloads/sheet.xlsx"
+location = input("Please enter the absolute path (/my/complete/path/data.xlsx) of the workbook/excel with case data: ")
+final_location = input("Please enter the absolute path (/my/complete/path/) at which the final data with case category needs to be saved: ")
+#location = "/home/niks/Downloads/sheet.xlsx"
+sheet = input("Please enter the sheet number which has the data in workbook. Please note numbering starts from 0 : ")
+sheet_index = int(sheet)
 rb = xlrd.open_workbook(location)
 wb = copy(rb)
-read_sheet = rb.sheet_by_index(1)
-write_sheet = wb.get_sheet(1)
+read_sheet = rb.sheet_by_index(sheet_index)
+write_sheet = wb.get_sheet(sheet_index)
 #Cateogries and keywords for each category
 category_meta_data = { #"Upgrade": [ "upgrade", "install" ],
     "Upgrade": {"upgrade": []},
@@ -53,6 +58,7 @@ category_meta_data_ignore_words = {
 #              }
 processed_cases= []
 final_category_wise_case_list = deepcopy(category_meta_data)
+# start with problem statement first
 for i in range(read_sheet.nrows):
 # ignore the first row of column headings
     if i == 0:
@@ -63,7 +69,6 @@ for i in range(read_sheet.nrows):
     for key in category_meta_data.keys():
         # iterate over keyword for each category, till there is match.
         for keyword in category_meta_data[key]:
-            # look for the keyword in the case description
             dont_add = False
             # look for the keyword in the problem statement
             if keyword.find('/') != -1:
@@ -91,8 +96,8 @@ for i in range(read_sheet.nrows):
             continue
         break
 
+# do the same thing for case description but only for cases which did't get any category
 for i in range(read_sheet.nrows):
-    #ignore the first row of column headings
     if i == 0:
         continue
     case_number = int(read_sheet.cell_value(i,0))
@@ -135,14 +140,25 @@ for i in range(read_sheet.nrows):
         write_sheet.write(i, 10, 'Others')
 
 wb.save('/home/niks/Downloads/sheet.xlsx')
+new_wb= xlwt.Workbook()
+new_ws = new_wb.add_sheet('Category wise cases')
+new_ws.write(0,0,'Main Category')
+new_ws.write(0,1,'Sub Category')
+new_ws.write(0,2,'Cases')
+new_ws.write(0,3,'List of cases')
 total_cases = 0
+i=1
 for key in final_category_wise_case_list:
     print(key, ':')
+    new_ws.write(i,0, key)
+    i = i+1
     for keyword in final_category_wise_case_list[key]:
       print('\r', keyword, ':', len(final_category_wise_case_list[key][keyword]), 'Case(s). List of cases: ', final_category_wise_case_list[key][keyword])
-        #print (keyword, '  :  ', len(value), 'Cases(s). List of cases is: ', value)
-# for key, value in final_category_wise_case_list.items():
-#     print(key, ' : ', len(value), 'Case(s). List of cases is: ', value)
+      new_ws.write(i, 1, keyword)
+      new_ws.write(i, 2, len(final_category_wise_case_list[key][keyword]))
+      new_ws.write(i, 3, str(final_category_wise_case_list[key][keyword]))
+      i = i+1
       total_cases = total_cases + len(final_category_wise_case_list[key][keyword])
     print('----------------------------------------------------------------------------------------------')
 print("Total cases processed: %s" % total_cases)
+new_wb.save(final_location+'Category_wise_cases.xlsx')
