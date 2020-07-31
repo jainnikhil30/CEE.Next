@@ -1,3 +1,5 @@
+# This script is used for categorising cases for SysMgmt
+# Author - Nikhil Jain (nikjain@redhat.com)
 import xlrd
 import xlwt
 from xlutils.copy import copy
