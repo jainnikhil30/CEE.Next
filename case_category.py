@@ -60,6 +60,7 @@ category_meta_data_ignore_words = {
 #              }
 processed_cases= []
 final_category_wise_case_list = deepcopy(category_meta_data)
+final_category_wise_case_list_comment_count = deepcopy(category_meta_data)
 # start with problem statement first
 for i in range(read_sheet.nrows):
 # ignore the first row of column headings
@@ -67,10 +68,13 @@ for i in range(read_sheet.nrows):
         continue
     case_number = int(read_sheet.cell_value(i, 0))
     problem_statement = read_sheet.cell_value(i, 2)
+    case_comment = int(read_sheet.cell_value(i,4))
     # iterate over each category one by one
     for key in category_meta_data.keys():
         # iterate over keyword for each category, till there is match.
         for keyword in category_meta_data[key]:
+            if len(final_category_wise_case_list[key][keyword]) ==0:
+                final_category_wise_case_list_comment_count[key][keyword] = 0
             dont_add = False
             # look for the keyword in the problem statement
             if keyword.find('/') != -1:
@@ -83,6 +87,7 @@ for i in range(read_sheet.nrows):
                     if not dont_add:
                         final_category_wise_case_list[key][keyword].append(case_number)
                         processed_cases.append(case_number)
+                        final_category_wise_case_list_comment_count[key][keyword] += case_comment
                         write_sheet.write(i, 10, key)
                         break
             elif problem_statement.lower().find(keyword) != -1 and case_number not in final_category_wise_case_list[key]:
@@ -92,6 +97,7 @@ for i in range(read_sheet.nrows):
                 if not dont_add:
                     final_category_wise_case_list[key][keyword].append(case_number)
                     processed_cases.append(case_number)
+                    final_category_wise_case_list_comment_count[key][keyword] += case_comment
                     write_sheet.write(i, 10, key)
                     break
         else:
@@ -104,10 +110,13 @@ for i in range(read_sheet.nrows):
         continue
     case_number = int(read_sheet.cell_value(i,0))
     case_description = read_sheet.cell_value(i,3)
+    case_comment = int(read_sheet.cell_value(i,4))
     #iterate over each category one by one
     for key in category_meta_data.keys():
         #iterate over keyword for each category, till there is match.
         for keyword in category_meta_data[key]:
+            if len(final_category_wise_case_list[key][keyword]) ==0:
+                final_category_wise_case_list_comment_count[key][keyword] = 0
             #look for the keyword in the case description
             dont_add = False
             if case_number not in processed_cases:
@@ -121,6 +130,7 @@ for i in range(read_sheet.nrows):
                         if not dont_add:
                             final_category_wise_case_list[key][keyword].append(case_number)
                             processed_cases.append(case_number)
+                            final_category_wise_case_list_comment_count[key][keyword] += case_comment
                             write_sheet.write(i, 10, key)
                             break
                 elif case_description.lower().find(keyword) != -1 and case_number not in final_category_wise_case_list[key]:
@@ -130,6 +140,7 @@ for i in range(read_sheet.nrows):
                     if not dont_add:
                         final_category_wise_case_list[key][keyword].append(case_number)
                         processed_cases.append(case_number)
+                        final_category_wise_case_list_comment_count[key][keyword] += case_comment
                         write_sheet.write(i,10,key)
                         break
         else:
@@ -139,15 +150,17 @@ for i in range(read_sheet.nrows):
              # if no match put it in Other bucket
     if case_number not in processed_cases and case_number not in final_category_wise_case_list["Others"]:
         final_category_wise_case_list["Others"]["other"].append(case_number)
+        final_category_wise_case_list_comment_count["Others"]["other"] += case_comment
         write_sheet.write(i, 10, 'Others')
 
-wb.save('/home/niks/Downloads/sheet.xlsx')
+wb.save('/home/niks/Downloads/sheet.xls')
 new_wb= xlwt.Workbook()
 new_ws = new_wb.add_sheet('Category wise cases')
 new_ws.write(0,0,'Main Category')
 new_ws.write(0,1,'Sub Category')
 new_ws.write(0,2,'Cases')
 new_ws.write(0,3,'List of cases')
+new_ws.write(0,4,'Total Case comments')
 total_cases = 0
 i=1
 for key in final_category_wise_case_list:
@@ -159,6 +172,7 @@ for key in final_category_wise_case_list:
       new_ws.write(i, 1, keyword)
       new_ws.write(i, 2, len(final_category_wise_case_list[key][keyword]))
       new_ws.write(i, 3, str(final_category_wise_case_list[key][keyword]))
+      new_ws.write(i, 4, str(final_category_wise_case_list_comment_count[key][keyword]))
       i = i+1
       total_cases = total_cases + len(final_category_wise_case_list[key][keyword])
     print('----------------------------------------------------------------------------------------------')
