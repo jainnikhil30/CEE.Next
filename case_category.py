@@ -61,6 +61,7 @@ category_meta_data_ignore_words = {
 processed_cases= []
 final_category_wise_case_list = deepcopy(category_meta_data)
 final_category_wise_case_list_comment_count = deepcopy(category_meta_data)
+account_wise_case_details = {}
 # start with problem statement first
 for i in range(read_sheet.nrows):
 # ignore the first row of column headings
@@ -69,6 +70,12 @@ for i in range(read_sheet.nrows):
     case_number = int(read_sheet.cell_value(i, 0))
     problem_statement = read_sheet.cell_value(i, 2)
     case_comment = int(read_sheet.cell_value(i,4))
+    account_number = int(read_sheet.cell_value(i, 5))
+    account_name = read_sheet.cell_value(i,6)
+    if account_number not in account_wise_case_details.keys():
+        #account_wise_case_details[account_number] = deepcopy(category_meta_data)
+        account_wise_case_details[account_number] = {}
+        account_wise_case_details[account_number][account_name] = deepcopy(category_meta_data)
     # iterate over each category one by one
     for key in category_meta_data.keys():
         # iterate over keyword for each category, till there is match.
@@ -86,6 +93,7 @@ for i in range(read_sheet.nrows):
                             dont_add = True
                     if not dont_add:
                         final_category_wise_case_list[key][keyword].append(case_number)
+                        account_wise_case_details[account_number][account_name][key][keyword].append(case_number)
                         processed_cases.append(case_number)
                         final_category_wise_case_list_comment_count[key][keyword] += case_comment
                         write_sheet.write(i, 10, key)
@@ -97,6 +105,7 @@ for i in range(read_sheet.nrows):
                 if not dont_add:
                     final_category_wise_case_list[key][keyword].append(case_number)
                     processed_cases.append(case_number)
+                    account_wise_case_details[account_number][account_name][key][keyword].append(case_number)
                     final_category_wise_case_list_comment_count[key][keyword] += case_comment
                     write_sheet.write(i, 10, key)
                     break
@@ -111,6 +120,12 @@ for i in range(read_sheet.nrows):
     case_number = int(read_sheet.cell_value(i,0))
     case_description = read_sheet.cell_value(i,3)
     case_comment = int(read_sheet.cell_value(i,4))
+    account_number = int(read_sheet.cell_value(i, 5))
+    account_name = read_sheet.cell_value(i,6)
+    if account_number not in account_wise_case_details.keys():
+        #account_wise_case_details[account_number] = deepcopy(category_meta_data)
+        account_wise_case_details[account_number] = {}
+        account_wise_case_details[account_number][account_name] = deepcopy(category_meta_data)
     #iterate over each category one by one
     for key in category_meta_data.keys():
         #iterate over keyword for each category, till there is match.
@@ -130,6 +145,7 @@ for i in range(read_sheet.nrows):
                         if not dont_add:
                             final_category_wise_case_list[key][keyword].append(case_number)
                             processed_cases.append(case_number)
+                            account_wise_case_details[account_number][account_name][key][keyword].append(case_number)
                             final_category_wise_case_list_comment_count[key][keyword] += case_comment
                             write_sheet.write(i, 10, key)
                             break
@@ -140,6 +156,7 @@ for i in range(read_sheet.nrows):
                     if not dont_add:
                         final_category_wise_case_list[key][keyword].append(case_number)
                         processed_cases.append(case_number)
+                        account_wise_case_details[account_number][account_name][key][keyword].append(case_number)
                         final_category_wise_case_list_comment_count[key][keyword] += case_comment
                         write_sheet.write(i,10,key)
                         break
@@ -150,10 +167,13 @@ for i in range(read_sheet.nrows):
              # if no match put it in Other bucket
     if case_number not in processed_cases and case_number not in final_category_wise_case_list["Others"]:
         final_category_wise_case_list["Others"]["other"].append(case_number)
+        account_wise_case_details[account_number][account_name]["Others"]["other"].append(case_number)
         final_category_wise_case_list_comment_count["Others"]["other"] += case_comment
         write_sheet.write(i, 10, 'Others')
 
 wb.save('/home/niks/Downloads/sheet.xls')
+
+#Create the category wise case report
 new_wb= xlwt.Workbook()
 new_ws = new_wb.add_sheet('Category wise cases')
 new_ws.write(0,0,'Main Category')
@@ -178,3 +198,47 @@ for key in final_category_wise_case_list:
     print('----------------------------------------------------------------------------------------------')
 print("Total cases processed: %s" % total_cases)
 new_wb.save(final_location+'Category_wise_cases.xlsx')
+
+#Create the account wise case category report
+new_account_wb = xlwt.Workbook()
+new_account_ws = new_account_wb.add_sheet('Account wise cases')
+new_account_ws.write(0,0,'Account Number')
+new_account_ws.write(0,1,'Account Name')
+new_account_ws.write(0,2,'Main Category')
+new_account_ws.write(0,3,'Sub Category')
+new_account_ws.write(0,4,'List of cases')
+new_account_ws.write(0,5,'Number of cases')
+i=1
+# for key in account_wise_case_details:
+#     new_account_ws.write(i,0, key)
+#     i = i+1
+#     for main_key in account_wise_case_details[key]:
+#       new_account_ws.write(i, 1, main_key)
+#       i = i+1
+#       for sub_key in account_wise_case_details[key][main_key]:
+#           if len(account_wise_case_details[key][main_key][sub_key]) > 0:
+#             new_account_ws.write(i, 2, sub_key)
+#             new_account_ws.write(i, 3, str(account_wise_case_details[key][main_key][sub_key]))
+#             i = i+1
+for acc_num in account_wise_case_details:
+    account_cases = 0
+    new_account_ws.write(i, 0, acc_num)
+    for acc_name in account_wise_case_details[acc_num]:
+        new_account_ws.write(i, 1, acc_name)
+        i=i+1
+        for main_cat in account_wise_case_details[acc_num][acc_name]:
+            new_account_ws.write(i, 2, main_cat)
+            i=i+1
+            for sub_key in account_wise_case_details[acc_num][acc_name][main_cat]:
+                if len(account_wise_case_details[acc_num][acc_name][main_cat][sub_key]) > 0:
+                    new_account_ws.write(i, 3, sub_key)
+                    new_account_ws.write(i, 4, str(account_wise_case_details[acc_num][acc_name][main_cat][sub_key]))
+                    new_account_ws.write(i, 5, len(account_wise_case_details[acc_num][acc_name][main_cat][sub_key]))
+                    account_cases = account_cases + len(account_wise_case_details[acc_num][acc_name][main_cat][sub_key])
+                    i = i+1
+    new_account_ws.write(i, 4, 'Total Account Cases')
+    new_account_ws.write(i, 5, account_cases)
+    i = i+1
+new_account_ws.write(i,4, 'Total Cases processed')
+new_account_ws.write(i,5, total_cases)
+new_account_wb.save(final_location+'Account_wise_cases.xlsx')
