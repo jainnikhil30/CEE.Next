@@ -1,5 +1,7 @@
 # This script is used for categorising cases for SysMgmt
 # Author - Nikhil Jain (nikjain@redhat.com)
+print("This script use three python libraries: xlrd, xlwt and xluitls. \nPlease make sure these libraries are installed using pip3 before proceeding with the script.\n"
+      "You can install them using: pip3 install xlrd xlwt xlutils")
 import xlrd
 import xlwt
 from xlutils.copy import copy
