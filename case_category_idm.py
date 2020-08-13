@@ -13,44 +13,20 @@ rb = xlrd.open_workbook(location)
 wb = copy(rb)
 read_sheet = rb.sheet_by_index(sheet_index)
 write_sheet = wb.get_sheet(sheet_index)
-#Cateogries and keywords for each category
+
 category_meta_data = { #"Upgrade": [ "upgrade", "install" ],
-    "Upgrade": {"upgrade": []},
-    "Manifest": {"manifest": [], "simple content access":[]},
-    "Content Management": {"content view": [], "promote": [], "publish": [], "pulp": [], "sync/capsule": [], "repos/capsule": []},
-    "Subscription & Registration": {"virt-who": [], "bootstrap" :[], "license": [], "register": [], "subscription": [], "repos/enable": [], "capsule/enable": [] },
-    "System Patching": {"patch": [], "katello-agent": [], "download packages": [], "dependencies": [], "yum": [], "repos": []},
-    "Insights": {"inventory": [], "insights": []},
-    "Config Management": {"puppet": [], "ansible": [], "playbook": [], "module": []},
-    "Performance": {"performance": [], "memory": [], "cpu": [], "swap": [], "mongodb": []},
-    "Provisioning": { "pxe": [], "cloud-init": [], "boot disk": [], "provisioning": [], "kickstart": [], "host image": []},
-    "Remote Execution": {"remote execution": [], "rex": []},
-    "Openscap": {"openscap": []},
-    "RHUI & AWS": {"rhui": [], "aws": [], "rhua": []},
-    "External Authentication": {"ldap": [], "active directory": [], "ipa": [], "authentication": [], "external authentication": [], "kerberos": [], "sssd": [], "keytab": []},
-    "Custom Certificate": {"custom cert": [], "ssl cert": []},
-    "CLI": {"hammer": [], "api": []},
-    "Backup Restore": {"migration": [], "migrate": [], "backup": [], "restore":[]},
-    "Others": {"other": []},
+    "IPA AD Trust ADD": {"trust-add": [], "CIFS server communication error": []},
+    "SSSD AD JOIN": {"adcli": [], "realm": []},
+    "WINBIND AD JOIN": {"winbind": [], "net ads": []},
+    "IPA SSSD": {"sssd": [], "kerberos": [], "keytab": []},
+    "Others": {"other": []}
     }
 
 category_meta_data_ignore_words = {
-    "Upgrade": ["after", "upgraded", "browser", "package"],
-    "Manifest": [],
-    "Content Management": [],
-    "Subscription & Registration": [],
-    "System Patching": [],
-    "Insights": [],
-    "Config Management":["repo", "subscription"],
-    "Performance":[],
-    "Provisioning":[],
-    "Remote Execution":[],
-    "Openscap": [],
-    "RHUI & AWS":[],
-    "External Authentication": [],
-    "Custom Certificate": [],
-    "CLI":[],
-    "Backup Restore":[],
+    "IPA AD Trust ADD": [],
+    "SSSD AD JOIN": ["samba", "ipa", "winbind"],
+    "WINBIND AD JOIN": ["sssd", "ipa"],
+    "IPA SSSD": ["samba", "winbind"],
     "Others":[]
 }
 
