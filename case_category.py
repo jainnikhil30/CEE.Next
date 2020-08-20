@@ -20,12 +20,12 @@ category_meta_data = { #"Upgrade": [ "upgrade", "install" ],
     "Upgrade": {"upgrade": []},
     "Manifest": {"manifest": [], "simple content access":[]},
     "Content Management": {"content view": [], "promote": [], "publish": [], "pulp": [], "sync/capsule": [], "repos/capsule": []},
-    "Subscription & Registration": {"virt-who": [], "bootstrap" :[], "license": [], "register": [], "subscription": [], "repos/enable": [], "capsule/enable": [] },
+    "Subscription & Registration": {"virt-who": [], "bootstrap" :[], "license": [], "register": [], "subscription": [], "repos/enable": []},
     "System Patching": {"patch": [], "katello-agent": [], "download packages": [], "dependencies": [], "yum": [], "repos": []},
     "Insights": {"inventory": [], "insights": []},
     "Config Management": {"puppet": [], "ansible": [], "playbook": [], "module": []},
     "Performance": {"performance": [], "memory": [], "cpu": [], "swap": [], "mongodb": []},
-    "Provisioning": { "pxe": [], "cloud-init": [], "boot disk": [], "provisioning": [], "kickstart": [], "host image": []},
+    "Provisioning": { "pxe": [], "cloud-init": [], "boot disk": [], "provisioning": [], "provision host": [], "host image": [],  "kickstart": []},
     "Remote Execution": {"remote execution": [], "rex": []},
     "Openscap": {"openscap": []},
     "RHUI & AWS": {"rhui": [], "aws": [], "rhua": []},
@@ -115,7 +115,7 @@ for i in range(read_sheet.nrows):
             continue
         break
 
-# do the same thing for case description but only for cases which did't get any categoryhmmm
+# do the same thing for case description but only for cases which did't get any category
 for i in range(read_sheet.nrows):
     if i == 0:
         continue
