@@ -37,7 +37,7 @@ category_meta_data = { #"Upgrade": [ "upgrade", "install" ],
     }
 
 category_meta_data_ignore_words = {
-    "Upgrade": ["after", "upgraded", "browser", "package"],
+    "Upgrade": ["after", "upgraded", "browser", "package", "provisioning"],
     "Manifest": [],
     "Content Management": [],
     "Subscription & Registration": [],
