@@ -37,7 +37,7 @@ category_meta_data = { #"Upgrade": [ "upgrade", "install" ],
     }
 
 category_meta_data_ignore_words = {
-    "Upgrade": ["after", "upgraded", "browser", "package", "provisioning"],
+    "Upgrade": ["after", "upgraded", "browser", "package", "provisioning", "virt-who", "yum update", "content view", "puppet", "memory", "openscap", "remote execution", "leapp", "post"],
     "Manifest": [],
     "Content Management": [],
     "Subscription & Registration": [],
