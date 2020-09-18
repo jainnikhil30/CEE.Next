@@ -25,7 +25,7 @@ category_meta_data = { #"Upgrade": [ "upgrade", "install" ],
     "Insights": {"inventory": [], "insights": []},
     "Config Management": {"puppet": [], "ansible": [], "playbook": [], "module": []},
     "Performance": {"performance": [], "memory": [], "cpu": [], "swap": [], "mongodb": []},
-    "Provisioning": { "pxe": [], "cloud-init": [], "boot disk": [], "provisioning": [], "provision host": [], "host image": [],  "kickstart": []},
+    "Provisioning": { "pxe": [], "cloud-init": [], "boot disk": [], "provisioning": [], "provision host": [], "host image": [],  "kickstart": [],  "create vm": []},
     "Remote Execution": {"remote execution": [], "rex": []},
     "Openscap": {"openscap": []},
     "RHUI & AWS": {"rhui": [], "aws": [], "rhua": []},
@@ -37,7 +37,7 @@ category_meta_data = { #"Upgrade": [ "upgrade", "install" ],
     }
 
 category_meta_data_ignore_words = {
-    "Upgrade": ["after", "upgraded", "browser", "package"],
+    "Upgrade": ["after", "upgraded", "browser", "package", "provisioning", "virt-who", "yum update", "content view", "puppet", "memory", "openscap", "remote execution", "leapp", "post"],
     "Manifest": [],
     "Content Management": [],
     "Subscription & Registration": [],
