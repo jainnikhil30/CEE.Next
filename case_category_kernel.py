@@ -64,11 +64,14 @@ for i in range(read_sheet.nrows):
 # ignore the first row of column headings
     if i == 0:
         continue
-    case_number = int(read_sheet.cell_value(i, 1))
-    problem_statement = read_sheet.cell_value(i, 4)
-    case_comment = int(read_sheet.cell_value(i,6))
-    account_number = int(read_sheet.cell_value(i, 7))
-    account_name = read_sheet.cell_value(i,8)
+    try:
+        case_number = int(read_sheet.cell_value(i, 1))
+        problem_statement = read_sheet.cell_value(i, 4)
+        case_comment = int(read_sheet.cell_value(i,6))
+        account_number = int(read_sheet.cell_value(i, 7))
+        account_name = read_sheet.cell_value(i,8)
+    except ValueError:
+        print("Row %s has wrong/merged cells. Please correct and re-run the script" % i)
     if account_number not in account_wise_case_details.keys():
         #account_wise_case_details[account_number] = deepcopy(category_meta_data)
         account_wise_case_details[account_number] = {}
