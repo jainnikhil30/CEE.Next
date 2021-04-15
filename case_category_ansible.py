@@ -118,11 +118,14 @@ for i in range(read_sheet.nrows):
 # ignore the first row of column headings
     if i == 0:
         continue
-    case_number = int(read_sheet.cell_value(i, 0))
-    problem_statement = read_sheet.cell_value(i, 2)
-    case_comment = int(read_sheet.cell_value(i,4))
-    account_number = int(read_sheet.cell_value(i, 5))
-    account_name = read_sheet.cell_value(i,6)
+    try:
+        case_number = int(read_sheet.cell_value(i, 0))
+        problem_statement = read_sheet.cell_value(i, 2)
+        case_comment = int(read_sheet.cell_value(i,4))
+        account_number = int(read_sheet.cell_value(i, 5))
+        account_name = read_sheet.cell_value(i,6)
+    except ValueError:
+        print("The Row %s has wrong/mereged cells. please correct and re-run the script" % i)
     if account_number not in account_wise_case_details.keys():
         #account_wise_case_details[account_number] = deepcopy(category_meta_data)
         account_wise_case_details[account_number] = {}
